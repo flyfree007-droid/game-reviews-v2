@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  titleRaw    String?
+  coverImage  String?
+  platform    String?
+  genre       String?
+  developer   String?
+  releaseYear Int?
+  body        String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  scores      Score?
+}
+
+model Score {
+  id         String  @id @default(cuid())
+  gameId     String  @unique
+  game       Game    @relation(fields: [gameId], references: [id])
+  visual     Float
+  difficulty Float
+  depth      Float
+  story      Float
+  grindLevel Float
+  innovation Float
+}
